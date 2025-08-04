@@ -1,0 +1,241 @@
+﻿<krpano version="1.22" 
+       title="Virtual Tour" >
+
+    <include url="%VIEWER%/plugins/combobox.xml" />
+    <include url="%VIEWER%/plugins/contextmenu.xml" />
+	<include url="skin/vtourskin.xml"     />
+	<!-- <include url="backgroundsound.xml" /> -->
+	<skin_settings maps="true"
+	               maps_type="google"
+	               maps_bing_api_key=""
+	               maps_google_api_key="AIzaSyBaWuEtD95rvT9JZ53rq0pG1RPGx5637nc"
+	               maps_zoombuttons="false"
+	               maps_loadonfirstuse="true"
+	               gyro="false"
+	               gyro_keeplookingdirection="false"
+	               webvr="false"
+	               webvr_keeplookingdirection="true"
+	               webvr_prev_next_hotspots="true"
+	               autotour="false"
+	               littleplanetintro="true"
+	               followmousecontrol="false"
+	               title="false"
+	               thumbs="false"
+	               thumbs_width="120" thumbs_height="80" thumbs_padding="10" thumbs_crop="0|40|240|160"
+	               thumbs_opened="false"
+	               thumbs_text="false"
+	               thumbs_dragging="true"
+	               thumbs_onhoverscrolling="false"
+	               thumbs_scrollbuttons="false"
+	               thumbs_scrollindicator="false"
+	               thumbs_loop="false"
+	               tooltips_buttons="false"
+	               tooltips_thumbs="false"
+	               tooltips_hotspots="false"
+	               tooltips_mapspots="false"
+	               deeplinking="false"
+	               loadscene_flags="MERGE"
+	               loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)"
+	               loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)"
+	               loadscene_blend_next="SLIDEBLEND(0.5,   0, 0.75, linear)"
+	               loadingtext=""
+	               layout_width="100%"
+	               layout_maxwidth="600"
+	               controlbar_width="-24"
+	               controlbar_height="50"
+	               controlbar_offset="30"
+	               controlbar_offset_closed="-40"
+	               controlbar_overlap.no-fractionalscaling="10"
+	               controlbar_overlap.fractionalscaling="0"
+				   design_bgcolor="0x2C2C2C" 
+	               design_thumbborder_bgborder="3 0xFFFFFF 1.0"
+	               design_thumbborder_padding="2"
+	               design_thumbborder_bgroundedge="0"
+	               design_text_css="color:#FFFFFF; font-family:Arial;"
+	               design_text_shadow="1"
+	               />
+        
+		<action name="startup">
+        if(device.mobile,
+         set(layer[skin_controlbar].visible, false);
+         set(layer[skin_thumbs].visible, false);
+         set(layer[skin_vr].visible, false);
+         );
+        </action>
+	<!-- action to crop the image for animation -->
+	    <action name="do_crop_animation" scope="local" args="framewidth, frameheight, framerate">
+		<!-- define local variables -->
+		calc(local.xframes, (caller.imagewidth /framewidth) BOR 0);
+		calc(local.frames, xframes * ((caller.imageheight / frameheight) BOR 0));
+		def(local.frame, integer, 0);
+		
+		<!-- set the first frame -->
+		calc(caller.crop, '0|0|' + framewidth + '|' + frameheight);
+		
+		<!-- do the animation -->
+		setinterval(calc('crop_anim_' + caller.name), calc(1.0 / framerate),
+			if(caller.loaded,
+				inc(frame);
+				if(frame GE frames, if(caller.onlastframe !== null, callwith(caller, onlastframe() ) ); set(frame,0); );
+				mod(xpos, frame, xframes);
+				div(ypos, frame, xframes);
+				Math.floor(ypos);
+				mul(xpos, framewidth);
+				mul(ypos, frameheight);
+				calc(caller.crop, xpos + '|' + ypos + '|' + framewidth + '|' + frameheight);
+			  ,
+				<!-- stop the interval when the hotspot gets removed -->
+				clearinterval(calc('crop_anim_' + caller.name));
+			);
+		);
+	</action>
+      
+	
+	<scene name="scene_airport" title="Airport" onstart="" thumburl="panos/Airport.tiles/thumb.jpg" lat="30.0668" lng="79.0193"  heading="0" >
+		
+		<control bouncinglimits="calc:image.cube ? true : false" />
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/Airport.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/Airport.tiles/%s/l%l/%0v/l%l_%s_%0v_%0h.jpg" multires="512,768,1536,2816,5760" />
+		</image>
+
+		<hotspot name="spot1754507002" style="skin_hotspotstyle" onloaded="do_crop_animation(64,64, 40);" ath="20" atv="0"  linkedscene="scene_art_gallery" linkedscene_lookat="-34.59,13.13,120.0" linkedscene_spot="spot1754507918" linkedscene_hoffset="182.25" use3dtransition="true" />
+
+        <!-- <include url="backgroundsound.xml" /> -->
+	</scene>
+    
+	<style name="flyoutimage"
+	       renderer="webgl"
+	       distorted="true"
+	       flying="0.0"
+	       backup_state=""
+	       backup_zorder=""
+	       flying_state="in"
+	       capture="true"
+	       onclick="flyout_hotspot()"
+	       />
+	<scene name="scene_art_gallery" title="Art Gallery" onstart="" thumburl="panos/Art_Gallery.tiles/thumb.jpg" lat="30.0668" lng="76.0093" heading="0">
+		
+		<control bouncinglimits="calc:image.cube ? true : false" />
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/Art_Gallery.tiles/preview.jpg" />
+
+		<image prealign="0|0.0|0">
+			<cube url="panos/Art_Gallery.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1024,1792" />
+		</image>
+
+		<hotspot name="spot1754507918" style="skin_hotspotstyle"  onloaded="do_crop_animation(64,64, 40);"  ath="144.423" atv="-2.101" depth="1000.0" linkedscene="scene_airport" linkedscene_lookat="-34.59,13.13,120.0" linkedscene_spot="spot1754507002" linkedscene_hoffset="177.75" use3dtransition="true" />
+
+			<hotspot name="spot1754507012" style="skin_hotspotstyle" onloaded="do_crop_animation(64,64, 10);" ath="0" atv="0" depth="1000.0" linkedscene="scene_lake"  linkedscene_lookat="-34.59,13.13,120.0" linkedscene_spot="spot1754507004" linkedscene_hoffset="177.75" use3dtransition="true" />
+
+
+        <!-- <include url="backgroundsound.xml" /> -->
+
+		<hotspot name="spot1" style="flyoutimage"
+	         url="image2.png"
+	         zorder="1"
+	         ath="-36"
+	         atv="65"
+	         scale="0.2"
+	         rx="-20.5" ry="-2" rz="1"
+	         />
+
+		<hotspot name="spot2" style="flyoutimage"
+	         url="image3.png"
+	         zorder="-1"
+	         ath="-40"
+	         atv="60"
+	         scale="0.1"
+	         rx="-30.5" ry="-2" rz="1"
+	         />
+
+	  <action name="flyout_hotspot">
+		for(set(i,0), i LT hotspot.count, inc(i),
+			copy(hs, hotspot[get(i)]);
+			if(hs.name != name AND hs.style == 'flyoutimage' AND (hs.flying_state == 'out' OR hs.flying_state == 'flyingout'),
+				callwith(hs, flyout_hotspot() );
+			  );
+		  );
+
+		if(flying_state == 'flyingout',
+			set(flying_state, 'flyingin');
+		  ,
+			if(flying_state == 'flyingin',
+				set(flying_state, 'flyingout');
+		  	  );
+		  );
+
+		if(flying_state == 'in',
+			calc(backup_state, '0.0|' + rx + '|' + ry + '|' + rz + '|' + scale);
+			copy(backup_zorder, zorder);
+			set(flying_state, 'flyingout');
+		  );
+
+		if(flying_state == 'out',
+			set(flying_state, 'flyingin');
+		  );
+
+		if(flying_state == 'flyingout',
+			set(zorder, 99);
+			tween(flying|rx|ry|rz|scale, ('1.0|0.0|0.0|0.0|'+0.9*min(stagewidth/sourcewidth,stageheight/sourceheight)), 0.5, default, set(flying_state,'out'); );
+		  );
+
+		if(flying_state == 'flyingin',
+			sub(zorder,1);
+			tween(flying|rx|ry|rz|scale, get(backup_state), 0.5, default, set(flying_state,'in'); copy(zorder,backup_zorder); );
+		  );
+	</action>
+	</scene>
+
+	<scene name="scene_church" title="Church" onstart="" thumburl="panos/Church.tiles/thumb.jpg" lat="28.0668" lng="74.0093" heading="0">
+		
+		<control bouncinglimits="calc:image.cube ? true : false" />
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/Church.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/Church.tiles/%s/l%l/%0v/l%l_%s_%0v_%0h.jpg" multires="512,768,1664,3328,6784" />
+		</image>
+		<hotspot name="spot1754507003" style="skin_hotspotstyle" onloaded="do_crop_animation(64,64, 10);" ath="-90.0" atv="0.0" depth="1000.0" linkedscene="scene_lake" linkedscene_lookat="-90.0,0.0,120.0" linkedscene_spot="spot1754507004" linkedscene_hoffset="-90.0" use3dtransition="true" />
+	
+		<!-- <include url="backgroundsound.xml" /> -->
+	</scene>
+
+	<scene name="scene_lake" title="lake" onstart="" thumburl="panos/lake.tiles/thumb.jpg" lat="25.0668" lng="74.0093" heading="0">
+		
+		<control bouncinglimits="calc:image.cube ? true : false" />
+
+		<view hlookat="129.5" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/lake.tiles/preview.jpg" />
+
+		<image prealign="0|129.5|0">
+			<cube url="panos/lake.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1024,2048,4160" />
+		</image>
+		<hotspot name="spot1754507004" style="skin_hotspotstyle" onloaded="do_crop_animation(64,64, 10);" ath="-90.0" atv="0.0" depth="1000.0" linkedscene="scene_church" linkedscene_lookat="-90.0,0.0,120.0" linkedscene_spot="spot1754507003" linkedscene_hoffset="-90.0" use3dtransition="true" />
+		<!-- <include url="backgroundsound.xml" /> -->
+	</scene>
+
+	<scene name="scene_wedding_hall" title="Wedding Hall" onstart="" thumburl="panos/Wedding_Hall.tiles/thumb.jpg" lat="25.0668" lng="73.0093" heading="0">
+		
+		<control bouncinglimits="calc:image.cube ? true : false" />
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/Wedding_Hall.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/Wedding_Hall.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176,4352" />
+		</image>
+		<hotspot name="spot1754507005" style="skin_hotspotstyle" onloaded="do_crop_animation(64,64, 10);" ath="-90.0" atv="0.0" depth="1000.0" linkedscene="scene_wedding_hall2" linkedscene_lookat="-90.0,0.0,120.0" linkedscene_spot="spot1754507006" linkedscene_hoffset="-90.0" use3dtransition="true" />
+		<!-- <include url="backgroundsound.xml" /> -->
+	</scene>
+</krpano>

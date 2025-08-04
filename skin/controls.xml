@@ -1,0 +1,14 @@
+<style name="ctrl_button_style"
+         scale="7.0"
+         onhover="tween(scale,1.1);"
+         onout="tween(scale,1.0);" />
+
+  <style name="btn_up"    url="arrow-up.png"    onclick="lookat(0,-90);" />
+  <style name="btn_down"  url="arrow-down.png"  onclick="lookat(180,0);" />
+  <style name="btn_left"  url="arrow-left.png"  onclick="lookat(-90,0);" />
+  <style name="btn_right" url="arrow-right.png" onclick="lookat(90,0);" />
+
+  <layer name="nav_up"    style="btn_up"    x="50%" y="10%" visible="true" />
+  <layer name="nav_down"  style="btn_down"  x="50%" y="90%" visible="true" />
+  <layer name="nav_left"  style="btn_left"  x="10%"  y="50%" visible="true" />
+  <layer name="nav_right" style="btn_right" x="90%"  y="50%" visible="true" />

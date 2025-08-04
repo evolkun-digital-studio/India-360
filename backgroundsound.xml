@@ -1,0 +1,19 @@
+<krpano>
+	<plugin name="soundinterface"
+	        url="%VIEWER%/plugins/soundinterface.js"
+	        rootpath=""
+	        preload="true"
+	        keep="true"
+	        />
+        
+		<layer name="snd" url="soundonoff.png" align="rightbottom" x="22" y="35" alpha="0.6" scale="0.8" onover="tween(alpha,1);" onout="tween(alpha,0.9);"
+	       crop="0|0|50|50"
+	       onclick="pausesoundtoggle(bgsnd); switch(crop, 0|0|50|50, 0|50|50|50);"
+	       />
+
+		<events name="currentpano"
+	        onnewpano="playsound(bgsnd, 'https://krpano.com/panos/xmas/ding_dong_merrily_on_high.mp3|https://krpano.com/panos/xmas/ding_dong_merrily_on_high.ogg', 0);"
+	        onremovepano="stopsound(bgsnd);"
+	        />
+
+</krpano>

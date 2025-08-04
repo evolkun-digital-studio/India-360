@@ -1,0 +1,660 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>krpano - Wedding Hall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="IE=edge" />
+	<link rel="stylesheet" type="css" href="tour.css" />
+	<style>
+  .tour-header {
+  position: fixed;
+  top: 10px;
+  width: 95%;
+  height: 80px;
+  left: 50%; /* Add this */
+  transform: translateX(-50%); /* Add this */
+  align-self: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 0 20px;
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.header-left .logo {
+  height: 150px;
+  font-weight: 900;
+}
+
+.header-center {
+  text-align: center;
+}
+
+.header-center p {
+  margin: 0;
+  font-size: 30px;
+  font-weight: bolder;
+}
+
+.header-right .menu-btn {
+  background: none;
+  border: none;
+  font-size: 45px;
+  margin-right: 50px;
+  color: white;
+  cursor: pointer;
+}
+
+.contact-panel {
+  position: absolute;
+  top: 70px;
+  right: 25px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  width: 250px;
+  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.contact-panel h3 {
+  margin-top: 0;
+  font-size: 16px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+/* Responsive */
+@media screen and (max-width: 700px) {
+  .header-left .logo {
+    height: 100px;
+  }
+
+  .tour-header {
+    padding: 10px 15px;
+    height: 40px;
+    border-radius: 0px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-center p {
+    font-size: 25px;
+    padding-right: 4px;
+  }
+
+  .header-right .menu-btn {
+    font-size: 30px;
+    margin-right: 1rem;
+  }
+
+  .contact-panel {
+    width: 90%;
+    right: 5%;
+    font-size: 12px;
+    padding: 10px 15px;
+  }
+
+  .contact-panel h3 {
+    font-size: 14px;
+  }
+}
+		html { height:100%; }
+		body { height:100%; overflow:hidden; margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#FFFFFF; background-color:#000000; }
+
+.scene-toggle-btn {
+  position: fixed;
+  bottom: 30px;
+  left: 0px;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: white;
+  color: black;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.scene-preview {
+  position: fixed;
+  bottom: 30px;
+  left: 5px;
+  width: 400px;
+  max-height: 500px;
+  background: white;
+  color: black;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  padding: 20px;
+  z-index: 9998;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  display: none;
+  scrollbar-color: #e2e2e2 transparent;
+}
+
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutToLeft {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.slide-in-left {
+  animation: slideInFromLeft 0.4s ease-out forwards;
+}
+
+.slide-out-left {
+  animation: slideOutToLeft 0.4s ease-in forwards;
+}
+
+
+.scene-preview h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.scene-card {
+  display: flex;
+  align-items: center;
+  background: #f4f4f4;
+  color: black;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.scene-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.scene-card .info {
+  flex: 1;
+  margin-left: 15px;
+}
+
+.scene-card .info h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.scene-card .info button {
+  margin-top: 6px;
+  padding: 4px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #333;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.arrow-icon {
+  width: 25px;
+  height: 20px;
+  margin-right: 8px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  vertical-align: middle;
+}
+.arrow-icon:hover {
+  transform: translateX(5px);
+  transition: transform 0.3s ease;
+}
+
+.closebtn:hover {
+  background: #aaa;
+  float: right;
+  font-size: 22px;
+  font-weight: bold;
+}
+.scene-card:hover {
+   background-color: lightblue;
+}
+
+
+/* 🔁 Responsive Styles */
+@media (max-width: 768px) {
+  .scene-preview {
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-height: 80vh;
+    border-radius: 15px;
+    padding: 15px;
+  }
+
+  .scene-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .scene-card img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  .scene-card .info {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .scene-card .info h3 {
+    font-size: 15px;
+  }
+
+  .scene-card .info button {
+    width: 100%;
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .scene-toggle-btn {
+    font-size: 14px;
+    padding: 10px 16px;
+    bottom: 20px;
+    left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .scene-preview {
+    max-height: 60vh;
+    padding: 14px;
+  }
+
+  .scene-card .info h3 {
+    font-size: 14px;
+  }
+
+  .scene-toggle-btn {
+    font-size: 13px;
+    padding: 8px 8px;
+    bottom: 32px;
+  }
+}
+/* chatbot */
+   #chatbot-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    #chatbot-toggle img {
+      width: 30px;
+      height: 30px;
+    }
+
+    #chatbot-box {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 320px;
+      max-height: 450px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9998;
+    }
+
+    #chatbot-header {
+      background: rgba(0, 0, 0, 0.3);
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    #chatbot-header img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    #chatbot-messages {
+      padding: 10px;
+      height: 280px;
+      overflow-y: auto;
+      font-size: 14px;
+      color: white;
+    }
+
+    #chatbot-input-area {
+      display: flex;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+    }
+
+    #chatbot-input {
+      flex: 1;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      outline: none;
+    }
+
+    #chatbot-send {
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      border: none;
+      padding: 0 15px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+     body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f2027;
+      margin: 0;
+    }
+
+    /* Hide up/down arrows and make thin scroll */
+.scroll-container {
+  max-height: 400px;
+  padding:6px;
+  overflow-y: auto;
+  scrollbar-width: thin;               /* Firefox */
+  scrollbar-color: #ccc transparent;  /* Firefox */
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 1px;
+}
+
+.scroll-container::-webkit-scrollbar-button {
+  display: none;                      
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 15px;
+}
+
+	</style>
+</head>
+<body>
+
+<script src="tour.js"></script>
+    <div id="pano" style="width:100%;height:100%;">
+	<noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;"><td><div style="text-align:center;">ERROR:<br/><br/>Javascript not activated<br/><br/></div></td></tr></table></noscript>
+	<script>
+	
+    embedpano({
+     id: "krpanoSWFObject",
+     target: "pano",
+     xml: "tour.xml",
+     html5: "only",
+     passQueryParameters: "startscene,startlookat",
+     onready: function(krpano) {
+     createScenePreviewPanel(krpano);
+  }
+});
+
+	function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+	</script>
+</div>
+<!-- Glass Header -->
+<!-- <div class="tour-header">
+  <div class="header-left">
+    <img src="skin/logo.png" alt="Logo" class="logo" />
+  </div>
+
+  <div class="header-center">
+      <p  id="scene-subtitle">Explore India in 360°</p>
+  </div>
+
+  <div class="header-right">
+    <button class="menu-btn" onclick="toggleContact()">☰</button>
+
+    <div class="contact-panel" id="contactPanel" style="display: none;">
+      <h3>Contact Us</h3>
+      <p>Email: info@india360.com</p>
+      <p>Phone: +91 98765 43210</p>
+      <p>Address: Delhi, India</p>
+    </div>
+  </div>
+</div> -->
+
+<div id="scenePreviewPanel" class="scene-preview">
+  <button onclick="closeScenePreview()" style="position:absolute; top:12px; right:15px; cursor: pointer; border: none; background: none; font-size: 25px;" class="closebtn">✖</button>
+  <h2>Scene Preview</h2>
+
+   <div class="scroll-container">
+    <div id="sceneList" class="scene-list"></div>
+  </div>
+</div>
+
+<button id="scenePreviewBtn" class="scene-toggle-btn">
+  Scene Preview
+  <img src="right.png" alt="→" class="arrow-icon" />
+</button>
+
+
+<!-- chatbot -->
+ <div id="chatbot-box">
+  <div id="chatbot-header">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712102.png" alt="Guide Avatar" />
+    Tour Guide
+  </div>
+  <div id="chatbot-messages"></div>
+  <div id="chatbot-input-area">
+    <input type="text" id="chatbot-input" placeholder="Ask me anything..." />
+    <button id="chatbot-send">Send</button>
+  </div>
+</div>
+<script>
+  function toggleContact() {
+    const panel = document.getElementById("contactPanel");
+    panel.style.display = panel.style.display === "none" ? "block" : "none";
+  }
+  function updateSceneTitle() {
+    const krpano = document.getElementById("krpanoSWFObject");
+    if (!krpano) return;
+
+    const currentScene = krpano.get("xml.scene");
+    const title = krpano.get("scene[" + currentScene + "].title");
+    document.getElementById("scene-subtitle").textContent = title;
+  }
+
+  function setSceneListener() {
+    const krpano = document.getElementById("krpanoSWFObject");
+    if (!krpano) return;
+
+    krpano.set("events.onnewscene", "js(updateSceneTitle())");
+    updateSceneTitle();
+  }
+
+  window.onload = function () {
+    setTimeout(setSceneListener, 500);
+  };
+
+document.getElementById("scenePreviewBtn").addEventListener("click", function () {
+  const panel = document.getElementById("scenePreviewPanel");
+  const button = document.getElementById("scenePreviewBtn");
+
+  const isOpen = panel.classList.contains("slide-in-left");
+
+  if (isOpen) {
+    panel.classList.remove("slide-in-left");
+    panel.classList.add("slide-out-left");
+
+    setTimeout(() => {
+      panel.style.display = "none";
+      button.style.display = "block";
+      panel.classList.remove("slide-out-left");
+    }, 400); // Match your transition duration
+  } else {
+    panel.style.display = "block";
+    panel.classList.add("slide-in-left");
+    button.style.display = "none";
+  }
+});
+
+
+function closeScenePreview() {
+  document.getElementById("scenePreviewPanel").style.display = "none";
+  document.getElementById("scenePreviewBtn").style.display = "block";
+}
+
+function createScenePreviewPanel(krpano) {
+  const container = document.getElementById("sceneList");
+  container.innerHTML = "";
+
+  const sceneCount = krpano.get("scene.count");
+
+  for (let i = 0; i < sceneCount; i++) {
+    const name = krpano.get(`scene[${i}].name`);
+    const title = krpano.get(`scene[${i}].title`);
+    const thumburl = krpano.get(`scene[${i}].thumburl`);
+
+    const card = document.createElement("div");
+    card.className = "scene-card";
+    card.onclick = function() {
+      loadSceneByName(name);
+      closeScenePreview();
+    };
+    card.style.cursor = "pointer";
+
+    card.innerHTML = `
+      <img src="${thumburl}" alt="${title}" />
+      <div class="info">
+        <h3>${title}</h3>
+      </div>
+    `;
+
+    container.appendChild(card);
+  }
+}
+
+function loadSceneByName(sceneName) {
+  const krpano = document.getElementById("krpanoSWFObject");
+  krpano.call(`loadscene(${sceneName}, null, MERGE,BLEND(1));`);
+  closeScenePreview();
+  document.getElementById("scenePreviewPanel").style.display = "none";
+}
+
+
+const toggleBtn = document.getElementById("chatbot-toggle");
+  const chatBox = document.getElementById("chatbot-box");
+  const chatInput = document.getElementById("chatbot-input");
+  const chatSend = document.getElementById("chatbot-send");
+  const chatMessages = document.getElementById("chatbot-messages");
+
+  toggleBtn.onclick = () => {
+    chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
+    chatBox.style.flexDirection = "column";
+  };
+
+  chatSend.onclick = async () => {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    addMessage("You", msg);
+    chatInput.value = "";
+    addMessage("Guide", "Typing...");
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer YOUR_OPENAI_API_KEY", // 🔥 Replace with your test key only
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o", // or "gpt-3.5-turbo"
+        messages: [
+          { role: "system", content: "You are a friendly and knowledgeable virtual tour guide." },
+          { role: "user", content: msg }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    removeLastMessage();
+    addMessage("Guide", data.choices?.[0]?.message?.content || "Sorry, I couldn't answer that.");
+  };
+
+  function addMessage(sender, text) {
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function removeLastMessage() {
+    chatMessages.lastChild?.remove();
+  }
+
+</script>
+
+</body>
+</html>
